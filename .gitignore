@@ -2,4 +2,5 @@
 *.a
 config_parser
 config_parser_test
+proxy_config
 
