@@ -146,16 +146,37 @@ NginxConfigParser::TokenType NginxConfigParser::ParseToken(std::istream* input,
 
   return TOKEN_TYPE_EOF;
 }
+int port;
+bool NginxConfigParser::Parse(const char* file_name, NginxConfig* config, int &portToSet) {
+  std::ifstream config_file;
+  config_file.open(file_name);
+  if (!config_file.good()) {
+    printf ("Failed to open config file: %s\n", file_name);
+    return false;
+  }
 
+  const bool return_value =
+      Parse(dynamic_cast<std::istream*>(&config_file), config);
+  config_file.close();
+  portToSet = port;
+  return return_value;
+}
 bool NginxConfigParser::Parse(std::istream* config_file, NginxConfig* config) {
-  std::stack<NginxConfig*> config_stack;
+  std::stack <NginxConfig*> config_stack;
   config_stack.push(config);
   TokenType last_token_type = TOKEN_TYPE_START;
   TokenType token_type;
+  // Port number is after "listen".
+  bool listenFlag = false;
   while (true) {
     std::string token;
     token_type = ParseToken(config_file, &token);
-    printf ("%s: %s\n", TokenTypeAsString(token_type), token.c_str());
+    //printf ("%s: %s\n", TokenTypeAsString(token_type), token.c_str());
+    // Next token will be port number
+    if (strcmp(token.c_str(),"listen") == 0)
+    {
+        listenFlag = true;
+    }
     if (token_type == TOKEN_TYPE_ERROR) {
       break;
     }
@@ -178,9 +199,19 @@ bool NginxConfigParser::Parse(std::istream* config_file, NginxConfig* config) {
           config_stack.top()->statements_.emplace_back(
               new NginxConfigStatement);
         }
+        else {
+        // Check if port number.
+        if (listenFlag) {
+            // Store port number from token.
+            port = atoi(token.c_str());
+            printf("test %d\n", port);
+            listenFlag = false;
+        }
         config_stack.top()->statements_.back().get()->tokens_.push_back(
             token);
-      } else {
+        }
+      }
+      else {
         // Error.
         break;
       }
