@@ -156,7 +156,7 @@ bool NginxConfigParser::Parse(const char* file_name, NginxConfig* config, int &p
   }
 
   const bool return_value =
-      Parse(dynamic_cast<std::istream*>(&config_file), config);
+      Parse(&config_file, config);
   config_file.close();
   portToSet = port;
   return return_value;
@@ -204,7 +204,6 @@ bool NginxConfigParser::Parse(std::istream* config_file, NginxConfig* config) {
         if (listenFlag) {
             // Store port number from token.
             port = atoi(token.c_str());
-            printf("test %d\n", port);
             listenFlag = false;
         }
         config_stack.top()->statements_.back().get()->tokens_.push_back(
