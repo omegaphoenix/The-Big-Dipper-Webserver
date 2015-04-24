@@ -9,11 +9,12 @@ class WebServer {
     public:
         WebServer(int port = 80);
         int getPort();
+        std::string makeDaytimeString();
         void helloWorld();
     private:
         int port;
-        boost::asio::io_service io_service;
-        std::string http200 = "HTTP/1.0 200 OK\n";
-        std::string contentType = "Content-Type: text/html;\n";
-        std::string hello = "\n<html><body>Hello, world!</body></html>\n";
+        const std::string http200 = "HTTP/1.0 200 OK\n";
+        const std::string contentType = "Content-Type: text/html;\n";
+        const std::string hello = "\n<html><body>"
+                                  "Hello, world!</body></html>\n";
 };
