@@ -264,7 +264,7 @@ bool NginxConfigParser::Parse(const char* file_name, NginxConfig* config) {
   }
 
   const bool return_value =
-      Parse(dynamic_cast<std::istream*>(&config_file), config);
+      Parse(&config_file, config);
   config_file.close();
   return return_value;
 }
