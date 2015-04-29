@@ -3,33 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <boost/asio.hpp>
+
 #include "webserver.h"
-#include "config_parser.h"
-
-
-int getPort(const NginxConfig &config)
-{
-    for(const auto& statement : config.statements_) 
-    {
-        bool k1 = true;
-        for(const std::string& token : statement->tokens_)
-        {
-            if (!k1)
-            {
-                try
-                {
-                    return stoi(token);
-                }
-                catch (...)
-                {
-                }
-            }
-            k1 = (token != "port");
-        }
-    }
-    return -1;
-}
-
+#include "utils.h"
 
 int main(int argc, char* argv[]) {
     if(argc == 2)
@@ -46,7 +22,7 @@ int main(int argc, char* argv[]) {
         {
             //WebServer webserver;
             WebServer webserver(port);
-            webserver.helloWorld();
+            webserver.demo();
             return 0;
         }
     }
