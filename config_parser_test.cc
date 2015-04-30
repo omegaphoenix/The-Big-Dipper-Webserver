@@ -23,8 +23,11 @@ TEST(NginxConfigParserTest, SimpleConfig) {
 /*
  * Based off of client.cpp
  * Distributed under the Boost Software License, Version 1.0.
+ * Currently only passes when server is running.
  */
 TEST(HelloWorldTest, ClientTest) {
+    //WebServer webserver;
+    //webserver.helloWorld();
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
     // Construct query using name of server and service
