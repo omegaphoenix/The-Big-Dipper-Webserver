@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
         {
             //WebServer webserver;
             WebServer webserver(port);
-            webserver.demo();
+            webserver.helloWorld();
+            //webserver.demo();
             return 0;
         }
     }
