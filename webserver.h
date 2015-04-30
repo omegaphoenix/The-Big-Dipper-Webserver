@@ -11,6 +11,7 @@ class WebServer {
         int getPort();
         std::string makeDaytimeString();
         void helloWorld();
+        void demo();
     private:
         int port;
         const std::string http200 = "HTTP/1.0 200 OK\n";
