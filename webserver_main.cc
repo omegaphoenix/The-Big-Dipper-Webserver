@@ -4,8 +4,8 @@
 #include <iostream>
 #include <boost/asio.hpp>
 
-#include "utils.h"
 #include "webserver.h"
+#include "utils.h"
 
 int main(int argc, char* argv[]) {
     if(argc == 2)
@@ -22,8 +22,7 @@ int main(int argc, char* argv[]) {
         {
             //WebServer webserver;
             WebServer webserver(port);
-            webserver.helloWorld();
-            //webserver.demo();
+            webserver.demo();
             return 0;
         }
     }
