@@ -31,7 +31,7 @@ TEST(HelloWorldTest, ClientTest) {
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
     // Construct query using name of server and service
-    tcp::resolver::query query("localhost", "80");
+    tcp::resolver::query query("localhost", "1080");
     tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
     tcp::socket socket(io_service);
     // Try connecting to server
