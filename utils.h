@@ -23,4 +23,3 @@ int getPort(const NginxConfig &config)
     return -1;
 }
 
-
