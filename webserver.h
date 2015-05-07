@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <boost/asio.hpp>
+#include "request_handler.h"
 
 using boost::asio::ip::tcp;
 
@@ -11,9 +12,8 @@ class WebServer {
         int getPort();
         std::string makeDaytimeString();
         void handleRequest();
-        void helloWorld();
-        void demo();
     private:
+        void createHandler(std::string request, Handler *h);
         int port;
         const std::string http200 = "HTTP/1.0 200 OK\n";
         const std::string contentType = "Content-Type: text/html;\n";

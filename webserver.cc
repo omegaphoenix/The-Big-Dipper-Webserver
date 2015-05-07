@@ -36,14 +36,13 @@ void WebServer::handleRequest() {
             boost::asio::streambuf buffer;
             std::string request = "";
 
-            for (int i = 0; i < 7; i++) {
+            //for (int i = 0; i < 7; i++) {
                 boost::asio::read_until(socket, buffer, "\r\n\r\n", read_error);
                 std::istream str(&buffer);
-                std::string line;
-                std::getline(str, line);
-                std::cout << line << '\n';
-                request += line + "<br/>";
-            }
+                std::getline(str, request);
+                std::cout << request << '\n';
+                //request += line + "<br/>";
+            //}
 
             // Read different requests. TODO
             //response_handler::readRequests(socket, request);
@@ -66,3 +65,19 @@ void WebServer::handleRequest() {
     }
 }
 
+void WebServer::createHandler(std::string request, Handler *h) {
+    if (request.find("GET") == 0) {
+        if (request.find("/echo") == 5) {
+            EchoHandler e;
+            h = &(e);
+        }
+        else if (request.find("/helloworld") == 5) {
+            HelloWorldHandler hw;
+            h = &(hw);
+        }
+        else {
+            StaticFileHandler sfh;
+            h = &(sfh);
+        }
+    }
+}
