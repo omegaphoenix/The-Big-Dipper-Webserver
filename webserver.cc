@@ -37,25 +37,27 @@ void WebServer::handleRequest() {
             std::string request = "";
 
             //for (int i = 0; i < 7; i++) {
-                boost::asio::read_until(socket, buffer, "\r\n\r\n", read_error);
-                std::istream str(&buffer);
-                std::getline(str, request);
-                std::cout << request << '\n';
-                //request += line + "<br/>";
+            boost::asio::read_until(socket, buffer, "\r\n\r\n", read_error);
+            std::istream str(&buffer);
+            std::getline(str, request);
+            std::cout << request << '\n';
+            //request += line + "<br/>";
             //}
-
+            Handler *h = NULL;
+            createHandler(request, &h);
             // Read different requests. TODO
             //response_handler::readRequests(socket, request);
 
             // Handle requests. TODO
-            //response_handler::handleRequests(socket, request);
+            boost::system::error_code write_error;
+            std::string get = h->handleRequests(request);
             // Echo GET request.
             if (request.find("GET") == 0) {
-                boost::system::error_code write_error;
                 std::string date = makeDaytimeString();
                 //std::string content = http200 + contentType + date + hello;
-                std::string content = http200 + contentType + date 
-                    + "\n<html><body>" + request + "</body></html>\n";
+                //std::string content = http200 + contentType + date 
+                //    + "\n<html><body>" + request + "</body></html>\n";
+                std::string content = http200 + contentType + date + get;
                 boost::asio::write(socket, boost::asio::buffer(content), write_error);
             }
         }
@@ -65,19 +67,19 @@ void WebServer::handleRequest() {
     }
 }
 
-void WebServer::createHandler(std::string request, Handler *h) {
+void WebServer::createHandler(std::string request, Handler **h) {
     if (request.find("GET") == 0) {
-        if (request.find("/echo") == 5) {
-            EchoHandler e;
-            h = &(e);
+        if (request.find("/echo") == 4) {
+            *h = new EchoHandler;
         }
-        else if (request.find("/helloworld") == 5) {
-            HelloWorldHandler hw;
-            h = &(hw);
+        else if (request.find("/") == 4) {
+            *h = new HelloWorldHandler;
+        }
+        else if (request.find("/static") == 4) {
+            *h = new StaticFileHandler;
         }
         else {
-            StaticFileHandler sfh;
-            h = &(sfh);
+            printf("Failed to create Handler %d \n",request.find("/"));
         }
     }
 }
