@@ -1,26 +1,24 @@
 #include <string>
+#include <stdexcept>
 #include <boost/asio.hpp>
 #include "webserver.h"
 
 using boost::asio::ip::tcp;
 
-WebServer::WebServer(int port) {
+WebServer::WebServer(int port, std::map<std::string, Handler*> *handlerMap) {
     this->port = port;
+    if (handlerMap == NULL) {
+        throw std::invalid_argument("Invalid handlerMap given to server.");
+    }
+    else {
+        this->handlerMap = handlerMap;
+    }
 }
 
 int WebServer::getPort() {
     return port;
 }
 
-// GMT Timestamp
-std::string WebServer::makeDaytimeString() {
-    using namespace std;
-    time_t  now = time(0); 
-    char *c_str = asctime(gmtime(&now));
-    std::string time_str(c_str);
-    time_str.pop_back(); // Erase newline
-    return "Date: " + time_str + " GMT\n";
-}
 
 void WebServer::handleRequest() {
     try {
@@ -50,16 +48,10 @@ void WebServer::handleRequest() {
 
             // Handle requests. TODO
             boost::system::error_code write_error;
-            std::string get = h->handleRequests(request);
-            // Echo GET request.
-            if (request.find("GET") == 0) {
-                std::string date = makeDaytimeString();
-                //std::string content = http200 + contentType + date + hello;
-                //std::string content = http200 + contentType + date 
-                //    + "\n<html><body>" + request + "</body></html>\n";
-                std::string content = http200 + contentType + date + get;
-                boost::asio::write(socket, boost::asio::buffer(content), write_error);
-            }
+            std::string response = h->handleRequests(request);
+
+            std::cout << "Response:" <<  response << '\n';
+            boost::asio::write(socket, boost::asio::buffer(response), write_error);
         }
     }
     catch (std::exception& e) {
@@ -71,15 +63,17 @@ void WebServer::createHandler(std::string request, Handler **h) {
     if (request.find("GET") == 0) {
         if (request.find("/echo") == 4) {
             *h = new EchoHandler;
+            std::cout << "Created echohandle\n";
         }
-        else if (request.find("/") == 4) {
+        else if (request.find("/hello") == 4) {
             *h = new HelloWorldHandler;
         }
         else if (request.find("/static") == 4) {
-            *h = new StaticFileHandler;
+            *h = new StaticFileHandler("/static", "/static_test");
         }
         else {
-            printf("Failed to create Handler %d \n",request.find("/"));
+            *h = new HelloWorldHandler;
+            printf("Failed to create Handler %lu \n",request.find("/"));
         }
     }
 }
