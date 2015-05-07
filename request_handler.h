@@ -84,7 +84,8 @@ class StaticFileHandler: public Handler {
                 return http404 + contentTypeHTML + date + "\r\n"
                     "Error 404: Not Found.";
             }
-            return http200 + contentTypeHTML + date + "\r\n";
+            return http200 + contentTypeHTML + date + "\r\n"
+                + content;
         }
     private: 
         std::string requestPath;

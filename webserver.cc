@@ -69,7 +69,7 @@ void WebServer::createHandler(std::string request, Handler **h) {
             *h = new HelloWorldHandler;
         }
         else if (request.find("/static") == 4) {
-            *h = new StaticFileHandler("/static", "/static_test");
+            *h = new StaticFileHandler("/static", "./static_test");
         }
         else {
             *h = new HelloWorldHandler;
