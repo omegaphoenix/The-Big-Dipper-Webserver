@@ -1,1 +1,5 @@
 port 1080;
+helloWorld /hello;
+echo /echo;
+static /static ./static_test;
+static / ./static_test;

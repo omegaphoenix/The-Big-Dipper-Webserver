@@ -1,21 +1,25 @@
 #include <iostream>
 #include <string>
+#include <map>
 #include <boost/asio.hpp>
+#ifndef REQUEST_HANDLER_H
+#define REQUEST_HANDLER_H
+#include "request_handler.h"
+#endif
 
 using boost::asio::ip::tcp;
 
 // Sets up a server
 class WebServer {
     public:
-        WebServer(int port = 80);
+        WebServer(int port = 80, 
+                std::map<std::string, Handler*> *handlerMap = NULL);
         int getPort();
-        std::string makeDaytimeString();
-        void helloWorld();
-        void demo();
+        void handleRequest();
     private:
+        void createHandler(std::string request, Handler **h);
         int port;
+        std::map<std::string, Handler*> *handlerMap; 
         const std::string http200 = "HTTP/1.0 200 OK\n";
         const std::string contentType = "Content-Type: text/html;\n";
-        const std::string hello = "\n<html><body>"
-                                  "Hello, world!</body></html>\n";
 };

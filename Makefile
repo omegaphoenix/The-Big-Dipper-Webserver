@@ -8,6 +8,7 @@ TESTFLAGS = -isystem $(GTEST_DIR)/include -I$(GTEST_DIR) -pthread
 all: webserver test
 webserver: $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	./webserver config_file
 
 test: config_parser_test
 	./config_parser_test

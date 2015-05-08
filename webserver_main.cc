@@ -21,8 +21,18 @@ int main(int argc, char* argv[]) {
         if(port > 0)
         {
             //WebServer webserver;
-            WebServer webserver(port);
-            webserver.demo();
+            
+            
+            // TODO Refactor as part of getPort / getConfig 
+
+            std::map<std::string, Handler*> *handler_map =
+                getMappings(config);
+            
+            // END TODO
+
+
+            WebServer webserver(port, handler_map);
+            webserver.handleRequest();
             return 0;
         }
     }
