@@ -10,14 +10,7 @@ using boost::asio::ip::tcp;
 class Handler {
     public:
         virtual std::string handleRequests(std::string request) = 0;
-        std::string makeDaytimeString() {
-            using namespace std;
-            time_t now = time(0);
-            char *c_str = asctime(gmtime(&now));
-            std::string time_str(c_str);
-            time_str.pop_back(); // Erase newline
-            return "Date: " + time_str + " GMT\r\n";
-        }
+        std::string makeDaytimeString();
     protected:
         const std::string http200 = "HTTP/1.0 200 OK\r\n";
         const std::string http404 = "HTTP/1.0 404 Not Found\r\n";
