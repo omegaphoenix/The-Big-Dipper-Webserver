@@ -20,7 +20,7 @@ class Handler {
         const std::string http200 = "HTTP/1.0 200 OK\r\n";
         const std::string http404 = "HTTP/1.0 404 Not Found\r\n";
         const std::string contentTypeHTML = "Content-Type: text/html;\r\n";
-        const std::string contentTypeJPEG = "Content-Type: image/jpeg\r\n";
+        const std::string contentTypeJPEG = "Content-Type: image/jpeg;\r\n";
 };
 
 class HelloWorldHandler: public Handler {

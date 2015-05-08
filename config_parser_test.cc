@@ -39,85 +39,9 @@ protected:
         return getPort(config_);
     }
 
-// Added 5/7/2015
-// Assignment 5 unit tests
-
-    int HandleHelloResponse(const std::string &config_string) {
-        HelloWorldHandler * a = new HelloWorldHandler();
-        std::string output;
-        size_t check_http200;
-        size_t check_content_type;
-        size_t check_hello;
-        size_t check_date;
-
-        output = a->handleRequests(config_string);
-        check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
-        check_content_type = output.find("Content-Type: text/html;\r\n");  
-        check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
-        check_date = output.find("GMT");
-
-        if (check_http200 == std::string::npos ||
-            check_content_type == std::string::npos ||
-            check_hello == std::string::npos || 
-            check_date == std::string::npos) {
-            return 1;
-        }
-        return 0;     
-    }   
-
-    int HandleEchoResponse(const std::string &config_string) {
-        EchoHandler * a = new EchoHandler();
-        std::string output;
-        size_t check_http200;
-        size_t check_content_type;
-        size_t check_date;
-        size_t check_request;
-
-        output = a->handleRequests(config_string);
-        check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
-        check_content_type = output.find("Content-Type: text/html;\r\n");  
-        check_date = output.find("GMT");
-        check_request = output.find(config_string);
-
-        if (check_http200 == std::string::npos ||
-            check_content_type == std::string::npos ||
-            check_date == std::string::npos ||
-            check_request == std::string::npos) {
-            return 1;
-        }
-        return 0;     
-    }  
-/*
-    int HandleStaticResponse(const std::string &config_string) {
-        StaticFileHandler * a = new StaticFileHandler();
-        std::string output;
-        size_t check_http200;
-        size_t check_content_type;
-        size_t check_content_type2;
-        size_t check_date;
-        size_t check_request;
-
-        output = a->handleRequests(config_string);
-        check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
-        check_http404 = output.find("HTTP/1.0 404 Not Found\r\n"); // did not use
-        check_content_type = output.find("Content-Type: text/html;\r\n");  
-        check_content_type2 = output.find("Content-Type: image/jpeg;\r\n");
-        check_date = output.find("GMT");
-
-        // TODO: Need to do content checking
-
-        if (check_http200 == std::string::npos ||
-            check_content_type == std::string::npos ||
-            check_date == std::string::npos) {
-            return 1;
-        }
-        return 0;     
-    }  
-*/
     NginxConfigParser parser_;
     NginxConfig config_;
 };
-// ------------ //
 
 /*
  * Test written in class.
@@ -147,23 +71,110 @@ TEST_F(NginxStringConfigTest, GetPortTest) {
 }
 
 
+
+class RequestHandlerTest : public ::testing::Test {
+    // Added 5/7/2015
+    // Assignment 5 unit tests
+    protected:
+    bool HandleHelloResponse(const std::string &config_string) {
+        HelloWorldHandler * a = new HelloWorldHandler();
+        std::string output;
+        size_t check_http200;
+        size_t check_content_type;
+        size_t check_hello;
+        size_t check_date;
+
+        output = a->handleRequests(config_string);
+        check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
+        check_content_type = output.find("Content-Type: text/html;\r\n");  
+        check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
+        check_date = output.find("GMT");
+
+        if (check_http200 == std::string::npos ||
+            check_content_type == std::string::npos ||
+            check_hello == std::string::npos || 
+            check_date == std::string::npos) {
+            return 0;
+        }
+        return 1;     
+    }   
+
+    bool HandleEchoResponse(const std::string &config_string) {
+        EchoHandler * a = new EchoHandler();
+        std::string output;
+        size_t check_http200;
+        size_t check_content_type;
+        size_t check_date;
+        size_t check_request;
+
+        output = a->handleRequests(config_string);
+        check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
+        check_content_type = output.find("Content-Type: text/html;\r\n");  
+        check_date = output.find("GMT");
+        check_request = output.find(config_string);
+
+        if (check_http200 == std::string::npos ||
+            check_content_type == std::string::npos ||
+            check_date == std::string::npos ||
+            check_request == std::string::npos) {
+            return 0;
+        }
+        return 1;     
+    }  
+
+    bool HandleStaticResponse(const std::string &config_string, 
+            const std::string &expected, bool jpg_flag, bool http_flag) {
+        StaticFileHandler * a = new StaticFileHandler("/static", "./static_test");
+        std::string output;
+        size_t check_http;
+        size_t check_content_type;
+        size_t check_date;
+        size_t check_request;
+
+        output = a->handleRequests(config_string);
+
+        if (http_flag) {
+            check_http = output.find("HTTP/1.0 200 OK\r\n");
+        }
+        else {
+            check_http = output.find("HTTP/1.0 404 Not Found\r\n"); 
+        }
+        if (!jpg_flag) {
+            check_content_type = output.find("Content-Type: text/html;\r\n");
+        }
+        else {
+            check_content_type = output.find("Content-Type: image/jpeg;\r\n");
+        }
+
+        check_date = output.find("GMT");
+        check_request = output.find(expected);
+
+        if (check_http == std::string::npos ||
+            check_content_type == std::string::npos ||
+            check_date == std::string::npos ||
+            check_request == std::string::npos) {
+            return 0;
+        }
+        return 1;     
+    }  
+};
+
 // Writing more tests, 5/7/2015 Assignment 5
-
-TEST_F(NginxStringConfigTest, HandleHelloResponse) {
-    EXPECT_EQ(0, HandleHelloResponse("GET /hello HTTP/1.1"));
+TEST_F(RequestHandlerTest, HandleHelloResponse) {
+    EXPECT_TRUE(HandleHelloResponse("GET /hello HTTP/1.1"));
 }
 
-TEST_F(NginxStringConfigTest, HandleEchoResponse) {
-    EXPECT_EQ(0, HandleEchoResponse("GET /echo HTTP/1.1"));
+TEST_F(RequestHandlerTest, HandleEchoResponse) {
+    EXPECT_TRUE(HandleEchoResponse("GET /echo HTTP/1.1"));
 }
 
-/*
-TEST_F(NginxStringConfigTest, HandleStaticResponse) {
-    EXPECT_EQ(0, HandleStaticResponse("GET /static HTTP/1.1"));
+TEST_F(RequestHandlerTest, HandleStaticResponse) {
+    // Depends on file /static_test/test.txt with content "testing".
+    // Test also assumes the mapping m["/static"] = "./static_test"
+    EXPECT_TRUE(HandleStaticResponse("GET /static/test.txt HTTP/1.1", "testing", 0, 1));
+    // Checks nonexistent file /static_test/asdfsdf 
+    EXPECT_TRUE(HandleStaticResponse("GET /static/asdfsdf HTTP/1.1", "Error 404", 0, 0));
+    //
+    EXPECT_TRUE(HandleStaticResponse("GET /static/Caltech.jpg HTTP/1.1", "jpeg", 1, 1));
 }
-
-*/
-
-
-
 
