@@ -20,6 +20,7 @@ class Handler {
         const std::string http200 = "HTTP/1.0 200 OK\r\n";
         const std::string http404 = "HTTP/1.0 404 Not Found\r\n";
         const std::string contentTypeHTML = "Content-Type: text/html;\r\n";
+        const std::string contentTypeJPEG = "Content-Type: image/jpeg\r\n";
 };
 
 class HelloWorldHandler: public Handler {
@@ -59,6 +60,7 @@ class StaticFileHandler: public Handler {
             std::cout << "path: "  << path << '\n';
             path.erase(0, requestPath.size()); 
 
+            // Check for index request cases. 
             if (path.empty()) {
                 path = "/index.html";
             }
@@ -66,6 +68,7 @@ class StaticFileHandler: public Handler {
                 path += "index.html";
             }
 
+            // Get requested file.
             std::string full_path = basePath + path;
             std::cout << "Searching for " + full_path + " ...\n";
             std::string content = "";
@@ -73,20 +76,28 @@ class StaticFileHandler: public Handler {
             if (file.is_open()) {
                 std::string line = "";
                 while (getline(file, line)) {
-                    content += line;
+                    content += line + "\n";
                 }
                 file.close();
             }
-            std::cout << "Content: " + content + "\n";
 
             std::string date = makeDaytimeString();
+
+            std::string contentType;
+            if (!content.empty() && path.find(".jpg") == path.size() - 4) {
+                contentType = contentTypeJPEG;
+            }
+            else {
+                contentType = contentTypeHTML;
+            }
+
             if (content.empty()) {
-                return http404 + contentTypeHTML + date + "\r\n"
+                return http404 + contentType + date + "\r\n"
                     "Error 404: Not Found.";
             }
-            return http200 + contentTypeHTML + date + "\r\n"
-                + content;
+            return http200 + contentType + date + "\r\n" + content;
         }
+
     private: 
         std::string requestPath;
         std::string basePath;
