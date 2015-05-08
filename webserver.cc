@@ -44,18 +44,16 @@ void WebServer::handleRequest() {
             //}
 
 
+//----------------------------------//
 
-
-
-            // at this point, request = string. 
+            // Define a few initial things
             std::string backslash = "/";
             std::string token = request.substr(request.find(backslash)); // will return substring after first backslash
 
             // now, we want to return the substring until the space or backslash      
             // NOTE: DEPENDS ON THE FACT THAT IT IS IMMEDIATELY FOLLOWED BY HTTP!!!
-            std::string space = "HTTP";
-            std::string token2 = token.substr(0, token.find(space));
-
+            std::string token2 = token.substr(0, token.find(" "));
+            std::cout << "FINAL SUBSTRING:" << token2 << '\n';
 
             // finally, there may be multiple backslashes. This will concatenate the string
             // further if there are. Uses the string after the first backslash.
@@ -68,9 +66,7 @@ void WebServer::handleRequest() {
             }
             std::cout << "FINAL SUBSTRING:" << token2 << '\n';
    
-    
-
-
+//----------------------------------//
 
             Handler *h = NULL;
             createHandler(request, &h);
@@ -79,7 +75,7 @@ void WebServer::handleRequest() {
 
             // Handle requests. TODO
             boost::system::error_code write_error;
-            std::string response = h->handleRequests(request);
+            std::string response = (*handlerMap)[token2]->handleRequests(request);
 
             std::cout << "Response:" <<  response << '\n';
             boost::asio::write(socket, boost::asio::buffer(response), write_error);
