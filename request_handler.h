@@ -1,3 +1,5 @@
+#ifndef REQUEST_HANDLER_H
+#define REQUEST_HANDLER_H 
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -102,3 +104,4 @@ class StaticFileHandler: public Handler {
         std::string requestPath;
         std::string basePath;
 };
+#endif

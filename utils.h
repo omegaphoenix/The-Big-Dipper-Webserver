@@ -1,10 +1,9 @@
+#ifndef UTILS_H
+#define UTILS_H
 #include <map>
 #include <string>
 #include "config_parser.h"
-#ifndef REQUEST_HANDLER_H
-#define REQUEST_HANDLER_H
 #include "request_handler.h"
-#endif
 
 int getPort(const NginxConfig &config)
 {
@@ -93,3 +92,4 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
     }
     return handlerMap;
 }
+#endif
