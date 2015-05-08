@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
             // TODO Refactor as part of getPort / getConfig 
 
             std::map<std::string, Handler*> *handler_map =
-                new std::map<std::string, Handler*>;
+                getMappings(config);
             
             // END TODO
 
