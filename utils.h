@@ -1,6 +1,10 @@
 #include <map>
 #include <string>
 #include "config_parser.h"
+#ifndef REQUEST_HANDLER_H
+#define REQUEST_HANDLER_H
+#include "request_handler.h"
+#endif
 
 int getPort(const NginxConfig &config)
 {
@@ -25,9 +29,9 @@ int getPort(const NginxConfig &config)
     return -1;
 }
 
-std::map<std::string, std::string> getMappings(const NginxConfig &config)
+std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
 {
-    std::map<std::string, std::string> handlerMap;
+    std::map<std::string, Handler*> *handlerMap = new std::map<std::string, Handler*>;
     for(const auto& statement: config.statements_)
     {
         bool k1 = false;
@@ -35,15 +39,15 @@ std::map<std::string, std::string> getMappings(const NginxConfig &config)
         bool k3 = false;
         bool k4 = false;
         std::string name = "";
+        Handler *h;
         for (const std::string& token : statement->tokens_)
         {
             if (k1)
             {
                 try
                 {
-                    // TODO Create handler.
-                    std::string s = "HelloWorldHandler";
-                    handlerMap.insert(std::pair<std::string,std::string>(token,s));
+                    h = new HelloWorldHandler;
+                    handlerMap->insert(std::pair<std::string, Handler*>(token, h));
                 }
                 catch (...)
                 {
@@ -53,9 +57,8 @@ std::map<std::string, std::string> getMappings(const NginxConfig &config)
             {
                 try
                 {
-                    // TODO Create handler.
-                    std::string s = "EchoHandler";
-                    handlerMap.insert(std::pair<std::string,std::string>(token,s));
+                    h = new EchoHandler;
+                    handlerMap->insert(std::pair<std::string,Handler*>(token, h));
                 }
                 catch (...)
                 {
@@ -75,9 +78,8 @@ std::map<std::string, std::string> getMappings(const NginxConfig &config)
             {
                 try
                 {
-                    // TODO Create handler. Also store next token as path.
-                    std::string s = "StaticFileHandler";
-                    handlerMap.insert(std::pair<std::string,std::string>(name,s));
+                    h = new StaticFileHandler(name, token);
+                    handlerMap->insert(std::pair<std::string,Handler*>(name, h));
                 }
                 catch (...)
                 {

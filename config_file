@@ -1,4 +1,4 @@
 port 1080;
 helloWorld /hello;
 echo /echo;
-static /static1 /foo;
+static /static ./static;

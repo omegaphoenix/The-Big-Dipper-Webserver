@@ -2,7 +2,10 @@
 #include <string>
 #include <map>
 #include <boost/asio.hpp>
+#ifndef REQUEST_HANDLER_H
+#define REQUEST_HANDLER_H
 #include "request_handler.h"
+#endif
 
 using boost::asio::ip::tcp;
 
