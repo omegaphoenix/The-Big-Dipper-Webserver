@@ -39,8 +39,39 @@ void WebServer::handleRequest() {
             std::istream str(&buffer);
             std::getline(str, request);
             std::cout << request << '\n';
+       
             //request += line + "<br/>";
             //}
+
+
+
+
+
+            // at this point, request = string. 
+            std::string backslash = "/";
+            std::string token = request.substr(request.find(backslash)); // will return substring after first backslash
+
+            // now, we want to return the substring until the space or backslash      
+            // NOTE: DEPENDS ON THE FACT THAT IT IS IMMEDIATELY FOLLOWED BY HTTP!!!
+            std::string space = "HTTP";
+            std::string token2 = token.substr(0, token.find(space));
+
+
+            // finally, there may be multiple backslashes. This will concatenate the string
+            // further if there are. Uses the string after the first backslash.
+            std::string token3 = token2.substr(1);
+
+            // if another backslash exists, concatenate it and everything afterwards
+            std::size_t found = token3.find(backslash);
+            if (found != std::string::npos) {   
+               token2 = token2.substr(0, found + 1);
+            }
+            std::cout << "FINAL SUBSTRING:" << token2 << '\n';
+   
+    
+
+
+
             Handler *h = NULL;
             createHandler(request, &h);
             // Read different requests. TODO
