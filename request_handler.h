@@ -18,7 +18,8 @@ class Handler {
         const std::string contentTypeJPEG = "Content-Type: image/jpeg;\r\n";
 };
 
-class HelloWorldHandler: public Handler {
+#endif
+/*class HelloWorldHandler: public Handler {
     public:
         std::string handleRequests(std::string request) {
             std::string date = makeDaytimeString();
@@ -96,5 +97,4 @@ class StaticFileHandler: public Handler {
     private: 
         std::string requestPath;
         std::string basePath;
-};
-#endif
+};*/

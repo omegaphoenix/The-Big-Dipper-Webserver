@@ -5,6 +5,9 @@
 #include <map>
 #include <boost/asio.hpp>
 #include "request_handler.h"
+#include "hello_world_handler.h"
+#include "echo_handler.h"
+#include "static_file_handler.h"
 
 using boost::asio::ip::tcp;
 
