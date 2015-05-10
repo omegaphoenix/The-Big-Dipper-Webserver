@@ -4,6 +4,7 @@
 
 class HelloWorldHandler: public Handler {
     public:
+        HelloWorldHandler(std::string handlerExt);
         std::string handleRequests(std::string request);
     private:
         const std::string hello = "\r\n<html><body>" 

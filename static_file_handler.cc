@@ -1,20 +1,11 @@
 #include "static_file_handler.h"
 
-StaticFileHandler::StaticFileHandler(std::string requestPath, std::string basePath) {
-    this->requestPath = requestPath;
+StaticFileHandler::StaticFileHandler(std::string handlerExt, std::string basePath) : Handler(handlerExt) {
     this->basePath = basePath;
 }
 
 std::string StaticFileHandler::handleRequests(std::string request) {
-    // Strip GET to form the std::string path 
-    std::istringstream iss(request);
-    std::string path;
-    iss >> path; // Remove GET
-    iss >> path;
-    // Remove request path.
-    // E.g. remove "/static" in GET /static/foo.html
-    std::cout << "path: "  << path << '\n';
-    path.erase(0, requestPath.size()); 
+    std::string path = stripHandlerExt(request);
 
     // Check for index request cases. 
     if (path.empty()) {

@@ -40,7 +40,7 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
             {
                 try
                 {
-                    h = new HelloWorldHandler;
+                    h = new HelloWorldHandler(token);
                     handlerMap->insert(std::pair<std::string, Handler*>(token, h));
                 }
                 catch (...)
@@ -51,7 +51,7 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
             {
                 try
                 {
-                    h = new EchoHandler;
+                    h = new EchoHandler(token);
                     handlerMap->insert(std::pair<std::string,Handler*>(token, h));
                 }
                 catch (...)

@@ -4,6 +4,7 @@
 
 class EchoHandler: public Handler {
     public:
+        EchoHandler(std::string handlerExt);
         std::string handleRequests(std::string request);
 };
 #endif
