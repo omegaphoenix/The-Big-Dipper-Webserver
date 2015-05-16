@@ -45,7 +45,6 @@ void WebServer::handleRequest() {
 
             // now, we want to return the substring until the space or backslash      
             std::string token2 = token.substr(0, token.find(" "));
-            std::cout << "FINAL SUBSTRING:" << token2 << '\n';
 
             // finally, there may be multiple backslashes. This will concatenate the string
             // further if there are. Uses the string after the first backslash.
@@ -56,7 +55,7 @@ void WebServer::handleRequest() {
             if (found != std::string::npos) {   
                token2 = token2.substr(0, found + 1);
             }
-            std::cout << "FINAL SUBSTRING:" << token2 << '\n';
+            std::cout << "Handler Extension: " << token2 << '\n';
    
             // Handle requests. 
             boost::system::error_code write_error;

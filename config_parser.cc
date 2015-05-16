@@ -14,7 +14,6 @@
 #include <stack>
 #include <string>
 #include <vector>
-
 #include "config_parser.h"
 
 std::string NginxConfig::ToString(int depth) {

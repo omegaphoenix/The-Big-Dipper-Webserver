@@ -77,7 +77,7 @@ class RequestHandlerTest : public ::testing::Test {
     // Assignment 5 unit tests
     protected:
     bool HandleHelloResponse(const std::string &config_string) {
-        HelloWorldHandler * a = new HelloWorldHandler();
+        HelloWorldHandler * a = new HelloWorldHandler("/hello");
         std::string output;
         size_t check_http200;
         size_t check_content_type;
@@ -100,7 +100,7 @@ class RequestHandlerTest : public ::testing::Test {
     }   
 
     bool HandleEchoResponse(const std::string &config_string) {
-        EchoHandler * a = new EchoHandler();
+        EchoHandler * a = new EchoHandler("/echo");
         std::string output;
         size_t check_http200;
         size_t check_content_type;

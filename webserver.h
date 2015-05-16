@@ -1,11 +1,13 @@
+#ifndef WEBSERVER_H
+#define WEBSERVER_H
 #include <iostream>
 #include <string>
 #include <map>
 #include <boost/asio.hpp>
-#ifndef REQUEST_HANDLER_H
-#define REQUEST_HANDLER_H
 #include "request_handler.h"
-#endif
+#include "hello_world_handler.h"
+#include "echo_handler.h"
+#include "static_file_handler.h"
 
 using boost::asio::ip::tcp;
 
@@ -23,3 +25,4 @@ class WebServer {
         const std::string http200 = "HTTP/1.0 200 OK\n";
         const std::string contentType = "Content-Type: text/html;\n";
 };
+#endif
