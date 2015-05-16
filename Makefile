@@ -18,14 +18,9 @@ config_parser_test:
 	ar -rv libgtest.a gtest-all.o
 	$(CXX) $(CXXFLAGS) $(TESTFLAGS) config_parser_test.cc config_parser.cc request_handler.cc hello_world_handler.cc echo_handler.cc static_file_handler.cc utils.cc $(GTEST_DIR)/src/gtest_main.cc libgtest.a -o config_parser_test $(LDFLAGS)
 
-utils.o: utils.h
-request_handler.o: request_handler.h
-hello_world_handler.o: hello_world_handler.h
-echo_handler.o: echo_handler.h
-static_file_handler.o: static_file_handler.h
-webserver.o: webserver.h
-config_parser.o: config_parser.h
-webserver_main.o: webserver_main.cc webserver.h config_parser.h utils.h
-	$(CXX) $(CXXFLAGS) -c webserver_main.cc
 clean:
 	$(RM) webserver config_parser_test *.o *~
+
+.PHONY: all clean
+
+-include $(SRCS:.cc=.d)
