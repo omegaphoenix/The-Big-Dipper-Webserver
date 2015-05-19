@@ -30,13 +30,21 @@ void WebServer::handleRequest() {
             tcp::socket socket(io_service);
             acceptor.accept(socket);
 
-            // Read request.
+            // Read request header.
             boost::system::error_code read_error;
             boost::asio::streambuf buffer;
             std::string request = "";
+            std::string line = "";
             boost::asio::read_until(socket, buffer, "\r\n\r\n", read_error);
             std::istream str(&buffer);
-            std::getline(str, request);
+            while (true) {
+                std::getline(str, line);
+                std::cout << line << '\n';
+                request += line;
+                if ((char) str.peek() == '\r') {
+                    break;
+                }
+            }
             std::cout << "Request: " << request << '\n';
        
             // Define a few initial things
