@@ -6,6 +6,7 @@
 
 using boost::asio::ip::tcp;
 
+// TODO: Change map to map<string, RequestHandler*>
 WebServer::WebServer(int port, std::map<std::string, Handler*> *handlerMap) {
     this->port = port;
     if (handlerMap == NULL) {

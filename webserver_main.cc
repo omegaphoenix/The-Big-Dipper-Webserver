@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
         int port = getPort(config);
 
         if (port > 0) {
+            // TODO: change map to map<string, RequestHandler*>.
             std::map<std::string, Handler*> *handler_map =
                 getMappings(config);
 
