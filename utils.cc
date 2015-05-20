@@ -23,6 +23,7 @@ int getPort(const NginxConfig &config)
     return -1;
 }
 
+// TODO: Modify to fit the new handlers and config file format.
 std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
 {
     std::map<std::string, Handler*> *handlerMap = new std::map<std::string, Handler*>;

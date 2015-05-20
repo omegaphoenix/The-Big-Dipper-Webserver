@@ -18,12 +18,13 @@ int main(int argc, char* argv[]) {
 
         int port = getPort(config);
 
-        if(port > 0) {
+        if (port > 0) {
+            // TODO: change map to map<string, RequestHandler*>.
             std::map<std::string, Handler*> *handler_map =
                 getMappings(config);
 
             WebServer webserver(port, handler_map);
-            webserver.handleRequest();
+            webserver.run();
             return 0;
         }
     }

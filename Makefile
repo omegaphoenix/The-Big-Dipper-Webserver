@@ -6,7 +6,7 @@ TESTFLAGS = -isystem $(GTEST_DIR)/include -I$(GTEST_DIR) -pthread
 PROG = webserver config_parser_test
 SRCS = webserver.cc config_parser.cc request_handler.cc hello_world_handler.cc echo_handler.cc static_file_handler.cc utils.cc
 
-all: webserver test
+all: test webserver
 webserver: $(SRCS:.cpp=.o) webserver_main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 	./webserver config_file

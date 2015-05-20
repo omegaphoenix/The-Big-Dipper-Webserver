@@ -72,6 +72,7 @@ TEST_F(NginxStringConfigTest, GetPortTest) {
 
 
 
+// TODO: Change tests to conform to new RequestHandler.
 class RequestHandlerTest : public ::testing::Test {
     // Added 5/7/2015
     // Assignment 5 unit tests

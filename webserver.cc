@@ -1,10 +1,12 @@
 #include <string>
+#include <sstream>
 #include <stdexcept>
 #include <boost/asio.hpp>
 #include "webserver.h"
 
 using boost::asio::ip::tcp;
 
+// TODO: Change map to map<string, RequestHandler*>
 WebServer::WebServer(int port, std::map<std::string, Handler*> *handlerMap) {
     this->port = port;
     if (handlerMap == NULL) {
@@ -19,9 +21,58 @@ int WebServer::getPort() {
     return port;
 }
 
+void WebServer::parseHTTP(tcp::socket *socket, HTTPRequest *req) {
+    // Read request header.
+    boost::system::error_code read_error;
+    boost::asio::streambuf buffer;
+    std::string line = "";
+    boost::asio::read_until(*socket, buffer, "\r\n\r\n", read_error);
+    std::istream socket_stream(&buffer);
 
-void WebServer::handleRequest() {
+
+    std::getline(socket_stream, line);
+    std::istringstream iss(line);
+    iss >> req->method;
+    iss >> req->path;
+    std::cout << "    Request:\n" << req->method + " " + req->path << '\n';
+
+    bool has_content = false;
+    int content_length = 0;
+
+    while (true) {
+        std::pair<std::string, std::string> header;
+        std::getline(socket_stream, line);
+        iss.clear();
+        iss.str(line);
+        iss >> header.first;
+        iss >> header.second;
+        req->headers.push_back(header);
+        if (header.first.compare("Content-Length:") == 0) {
+            has_content = true;
+            content_length = std::stoi(header.second, NULL);
+        }
+        std::cout << header.first + " " + header.second << '\n';
+        if ((char) socket_stream.peek() == '\r') {
+            socket_stream >> line;
+            break;
+        }
+    }
+
+    if (has_content) {
+        char *buffer = new char[content_length];
+        socket_stream.get(buffer, content_length);
+        std::string body(buffer);
+        req->request_body = body;
+        std::cout << body << '\n';
+    }
+
+    std::cout << '\n';
+}
+
+
+void WebServer::run() {
     try {
+        std::cout << "\nStarting webserver... \n\n";
         boost::asio::io_service io_service;
         tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
 
@@ -30,40 +81,22 @@ void WebServer::handleRequest() {
             tcp::socket socket(io_service);
             acceptor.accept(socket);
 
-            // Read request.
-            boost::system::error_code read_error;
-            boost::asio::streambuf buffer;
-            std::string request = "";
-            boost::asio::read_until(socket, buffer, "\r\n\r\n", read_error);
-            std::istream str(&buffer);
-            std::getline(str, request);
-            std::cout << "Request: " << request << '\n';
-       
-            // Define a few initial things
-            std::string backslash = "/";
-            std::string token = request.substr(request.find(backslash)); // will return substring after first backslash
+            // Parse HTTP Request. 
+            HTTPRequest req;
+            parseHTTP(&socket, &req);
+            std::istringstream iss(req.path);
+            std::string handlerExt = "";
+            std::getline(iss, handlerExt, '/'); // Remove initial '/' in path
+            std::getline(iss, handlerExt, '/'); // Extract extension.
+            handlerExt = "/" + handlerExt;
 
-            // now, we want to return the substring until the space or backslash      
-            std::string token2 = token.substr(0, token.find(" "));
-
-            // finally, there may be multiple backslashes. This will concatenate the string
-            // further if there are. Uses the string after the first backslash.
-            std::string token3 = token2.substr(1);
-
-            // if another backslash exists, concatenate it and everything afterwards
-            std::size_t found = token3.find(backslash);
-            if (found != std::string::npos) {   
-               token2 = token2.substr(0, found + 1);
-            }
-            std::cout << "Handler Extension: " << token2 << '\n';
-   
             // Handle requests. 
             boost::system::error_code write_error;
             std::string response = "";
-            if (handlerMap->count(token2) != 0) {
-                response = (*handlerMap)[token2]->handleRequests(request);
+            if (handlerMap->count(handlerExt) != 0) {
+                response = (*handlerMap)[handlerExt]->handleRequests(req.path);
             }
-            std::cout << "Response: " <<  response << '\n';
+            std::cout << "    Response:\n" <<  response << "\n";
             boost::asio::write(socket, boost::asio::buffer(response), write_error);
         }
     }

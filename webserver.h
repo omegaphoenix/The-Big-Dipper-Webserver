@@ -17,10 +17,12 @@ class WebServer {
         WebServer(int port = 80, 
                 std::map<std::string, Handler*> *handlerMap = NULL);
         int getPort();
-        void handleRequest();
+        void parseHTTP(tcp::socket *socket, HTTPRequest *req);
+        void run();
     private:
         void createHandler(std::string request, Handler **h);
         int port;
+        // TODO: Change map to map<string, RequestHandler*>
         std::map<std::string, Handler*> *handlerMap; 
         const std::string http200 = "HTTP/1.0 200 OK\n";
         const std::string contentType = "Content-Type: text/html;\n";
