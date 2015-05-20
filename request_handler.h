@@ -20,17 +20,17 @@
 using boost::asio::ip::tcp;
 
 struct HTTPRequest {
-  // The method of request (e.g. GET, HEAD, etc).
-  std::string method;
+    // The method of request (e.g. GET, HEAD, etc).
+    std::string method;
 
-  // The path (e.g. /path/to/handler/index.html).
-  std::string path;
+    // The path (e.g. /path/to/handler/index.html).
+    std::string path;
 
-  // Parsed headers (in order).
-  std::vector<std::pair<std::string, std::string>> headers;
+    // Parsed headers (in order).
+    std::vector<std::pair<std::string, std::string>> headers;
 
-  // The body of the request.
-  std::string request_body;
+    // The body of the request.
+    std::string request_body;
 };
 
 // RequestHandler is a long lived object that is expected to be created at
@@ -42,18 +42,34 @@ struct HTTPRequest {
 //   h->Configure(*config_.statements_[block_i]->child_block_.get())
 //   dispatch[path] = h;
 class RequestHandler {
- public:
-  // Configures this request handler to handle a particular type of request.
-  // It will be passed only the block of the config that pertains to this
-  // handler. The config block is represented by an NginxConfig.
-  //
-  // This must be called before calling HandleRequest().
-  virtual void Configure(const NginxConfig& child_config_block) = 0;
+    public:
+        // Configures this request handler to handle a particular type of request.
+        // It will be passed only the block of the config that pertains to this
+        // handler. The config block is represented by an NginxConfig.
+        //
+        // This must be called before calling HandleRequest().
+        virtual void Configure(const NginxConfig& child_config_block) = 0;
 
-  // Handles and individual request. Returns the response, including the
-  // return code, headers, and body.
-  virtual std::string HandleRequest(const HTTPRequest& req) = 0;
+        // Handles and individual request. Returns the response, including the
+        // return code, headers, and body.
+        virtual std::string HandleRequest(const HTTPRequest& req) = 0;
+        
+        // Gets the current time in GMT. 
+        std::string makeDaytimeString();
+
+    protected:
+        // Helpful HTTP constants.
+        const std::string http200 = "HTTP/1.0 200 OK\r\n";
+        const std::string http404 = "HTTP/1.0 404 Not Found\r\n";
+        const std::string contentTypeHTML = "Content-Type: text/html;\r\n";
+        const std::string contentTypeJPEG = "Content-Type: image/jpeg;\r\n";
 };
+
+// TODO: Replace old Handler.
+// Note that the below code does not comply with 
+// the common API and should be removed once the
+// tests and getMappings() are reconfigured, and 
+// the new handlers are renamed (if necessary).
 
 class Handler {
     public:
