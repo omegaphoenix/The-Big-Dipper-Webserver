@@ -33,7 +33,7 @@ void WebServer::parseHTTP(tcp::socket *socket, HTTPRequest *req) {
     std::istringstream iss(line);
     iss >> req->method;
     iss >> req->path;
-    std::cout << req->method + req->path << '\n';
+    std::cout << "    Request:\n" << req->method + " " + req->path << '\n';
 
     bool has_content = false;
     int content_length = 0;
@@ -50,10 +50,9 @@ void WebServer::parseHTTP(tcp::socket *socket, HTTPRequest *req) {
             has_content = true;
             content_length = std::stoi(header.second, NULL);
         }
-        std::cout << header.first + header.second << '\n';
+        std::cout << header.first + " " + header.second << '\n';
         if ((char) socket_stream.peek() == '\r') {
             socket_stream >> line;
-            std::cout << "Test: " << line << '\n';
             break;
         }
     }
@@ -63,13 +62,16 @@ void WebServer::parseHTTP(tcp::socket *socket, HTTPRequest *req) {
         socket_stream.get(buffer, content_length);
         std::string body(buffer);
         req->request_body = body;
+        std::cout << body << '\n';
     }
 
+    std::cout << '\n';
 }
 
 
 void WebServer::run() {
     try {
+        std::cout << "\nStarting webserver... \n\n";
         boost::asio::io_service io_service;
         tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
 
@@ -81,7 +83,11 @@ void WebServer::run() {
             // Parse HTTP Request. 
             HTTPRequest req;
             parseHTTP(&socket, &req);
+            std::istringstream iss(req.path);
             std::string handlerExt = "";
+            std::getline(iss, handlerExt, '/'); // Remove initial '/' in path
+            std::getline(iss, handlerExt, '/'); // Extract extension.
+            handlerExt = "/" + handlerExt;
 
             // Handle requests. 
             boost::system::error_code write_error;
@@ -89,7 +95,7 @@ void WebServer::run() {
             if (handlerMap->count(handlerExt) != 0) {
                 response = (*handlerMap)[handlerExt]->handleRequests(req.path);
             }
-            std::cout << "Response: " <<  response << '\n';
+            std::cout << "    Response:\n" <<  response << "\n";
             boost::asio::write(socket, boost::asio::buffer(response), write_error);
         }
     }
