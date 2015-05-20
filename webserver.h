@@ -17,7 +17,7 @@ class WebServer {
         WebServer(int port = 80, 
                 std::map<std::string, Handler*> *handlerMap = NULL);
         int getPort();
-        void handleRequest();
+        void run();
     private:
         void createHandler(std::string request, Handler **h);
         int port;

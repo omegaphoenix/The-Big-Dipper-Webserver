@@ -20,7 +20,7 @@ int WebServer::getPort() {
 }
 
 
-void WebServer::handleRequest() {
+void WebServer::run() {
     try {
         boost::asio::io_service io_service;
         tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), port));
