@@ -9,7 +9,10 @@ SRCS = webserver.cc config_parser.cc request_handler.cc hello_world_handler.cc e
 all: test webserver
 webserver: $(SRCS:.cpp=.o) webserver_main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	./webserver config_file
+	./webserver example_config2 
+
+webserver2: $(SRCS:.cpp=.o) webserver_main.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 test: config_parser_test
 	./config_parser_test
