@@ -1,7 +1,17 @@
 #include "static_file_handler.h"
 
 void NewStaticHandler::Configure(const NginxConfig& child_config_block) {
-    // TODO: Initialize this->root. 
+    // TODO: Initialize this->root.
+    for (std::vector<std::shared_ptr<NginxConfigStatement>>::const_iterator iter =
+         child_config_block.statements_.begin();
+         iter != child_config_block.statements_.end(); ++iter) {
+            if (((*iter)->tokens_.size() > 1)) {
+                if((*iter)->tokens_[0] == "root")
+                {
+                    this->root = (*iter)->tokens_[1];
+                }
+            }
+        } 
 }
 
 std::string NewStaticHandler::HandleRequest(const HTTPRequest& req) {

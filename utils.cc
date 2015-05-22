@@ -29,14 +29,14 @@ int getPort(const NginxConfig &config)
 }
 
 // TODO: Modify to fit the new handlers.
-std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
+std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config)
 {
-    std::map<std::string, Handler*> *handlerMap = new std::map<std::string, Handler*>;
+    std::map<std::string, RequestHandler*> *handlerMap = new std::map<std::string, RequestHandler*>;
 #if newAPI
     for(const auto& statement: config.statements_)
     {
         std::string name = "";
-        Handler *h;
+        RequestHandler *h;
         bool k = false; // True if last token was "handler"
         bool k1 = false; // True if last two tokens were handler helloworld
         bool k2 = false; // True if last two tokens were handler copycat
@@ -56,8 +56,8 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
                     try
                     {
                         printf("Created helloworld\n");
-                        h = new HelloWorldHandler(token);
-                        handlerMap->insert(std::pair<std::string, Handler*>(token, h));
+                        h = new NewHelloHandler();
+                        handlerMap->insert(std::pair<std::string, RequestHandler*>(token, h));
                     }
                     catch (...)
                     {
@@ -68,8 +68,8 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
                     try
                     {
                         printf("Created echo\n");
-                        h = new EchoHandler(token);
-                        handlerMap->insert(std::pair<std::string, Handler*>(token, h));
+                        h = new NewEchoHandler();
+                        handlerMap->insert(std::pair<std::string, RequestHandler*>(token, h));
                     }
                     catch (...)
                     {
@@ -79,23 +79,14 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
                 {
                     name = token;
                     printf("Created static\n");
-                    std::string location = "";
-                    for (std::vector<std::shared_ptr<NginxConfigStatement>>::const_iterator iter =
-                         statement->child_block_->statements_.begin();
-                         iter != statement->child_block_->statements_.end(); ++iter) {
-                        if (((*iter)->tokens_.size() > 1)) {
-                            if((*iter)->tokens_[0] == "root")
-                            {
-                                try
-                                {
-                                    h = new StaticFileHandler(name, (*iter)->tokens_[1]);
-                                    handlerMap->insert(std::pair<std::string, Handler*>(name, h));
-                                }
-                                catch (...)
-                                {
-                                }
-                            }
-                        }
+                    try
+                    {
+                        h = new NewStaticHandler();
+                        h->Configure(*(statement->child_block_));
+                        handlerMap->insert(std::pair<std::string, RequestHandler*>(name, h));
+                    }
+                    catch (...)
+                    {
                     }
                 }
                 k1 = false;

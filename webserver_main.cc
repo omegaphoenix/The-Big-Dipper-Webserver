@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 
         if (port > 0) {
             // TODO: change map to map<string, RequestHandler*>.
-            std::map<std::string, Handler*> *handler_map =
+            std::map<std::string, RequestHandler*> *handler_map =
                 getMappings(config);
 
             WebServer webserver(port, handler_map);

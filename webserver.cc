@@ -6,8 +6,7 @@
 
 using boost::asio::ip::tcp;
 
-// TODO: Change map to map<string, RequestHandler*>
-WebServer::WebServer(int port, std::map<std::string, Handler*> *handlerMap) {
+WebServer::WebServer(int port, std::map<std::string, RequestHandler*> *handlerMap) {
     this->port = port;
     if (handlerMap == NULL) {
         throw std::invalid_argument("Invalid handlerMap given to server.");
@@ -94,7 +93,8 @@ void WebServer::run() {
             boost::system::error_code write_error;
             std::string response = "";
             if (handlerMap->count(handlerExt) != 0) {
-                response = (*handlerMap)[handlerExt]->handleRequests(req.path);
+                //response = (*handlerMap)[handlerExt]->handleRequests(req.path);
+                response = (*handlerMap)[handlerExt]->HandleRequest(req);
             }
             std::cout << "    Response:\n" <<  response << "\n";
             boost::asio::write(socket, boost::asio::buffer(response), write_error);
