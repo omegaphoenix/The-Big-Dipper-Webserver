@@ -18,7 +18,7 @@ int getPort(const NginxConfig &config)
                 {
                 }
             }
-#if newAPI == 1
+#if newAPI
             k1 = (token == "listen");
 #else
             k1 = (token == "port");
@@ -28,11 +28,11 @@ int getPort(const NginxConfig &config)
     return -1;
 }
 
-// TODO: Modify to fit the new handlers and config file format.
+// TODO: Modify to fit the new handlers.
 std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
 {
     std::map<std::string, Handler*> *handlerMap = new std::map<std::string, Handler*>;
-#if newAPI == 1
+#if newAPI
     for(const auto& statement: config.statements_)
     {
         std::string name = "";
@@ -41,7 +41,6 @@ std::map<std::string, Handler*> *getMappings(const NginxConfig &config)
         bool k1 = false; // True if last two tokens were handler helloworld
         bool k2 = false; // True if last two tokens were handler copycat
         bool k3 = false; // True if past handler static but not root
-        //bool k4 = false; // True if last token was root
         for (const std::string& token : statement->tokens_)
         {
             if (k)
