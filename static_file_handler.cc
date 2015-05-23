@@ -6,8 +6,7 @@ void NewStaticHandler::Configure(const NginxConfig& child_config_block) {
          child_config_block.statements_.begin();
          iter != child_config_block.statements_.end(); ++iter) {
             if (((*iter)->tokens_.size() > 1)) {
-                if((*iter)->tokens_[0] == "root")
-                {
+                if((*iter)->tokens_[0] == "root") {
                     this->root = (*iter)->tokens_[1];
                 }
             }
