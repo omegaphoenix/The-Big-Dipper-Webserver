@@ -11,8 +11,7 @@ class NewEchoHandler : public RequestHandler {
 // TODO: Replace old Handler.
 // Note that the below code does not comply with 
 // the common API and should be removed once the
-// tests and getMappings() are reconfigured, and 
-// the new handlers are renamed (if necessary).
+// tests.
 
 class EchoHandler : public Handler {
     public:

@@ -83,6 +83,7 @@ void WebServer::run() {
             // Parse HTTP Request. 
             HTTPRequest req;
             parseHTTP(&socket, &req);
+            // Might not need this line any more.
             std::istringstream iss(req.path);
             std::string handlerExt = "";
             std::getline(iss, handlerExt, '/'); // Remove initial '/' in path
@@ -93,7 +94,6 @@ void WebServer::run() {
             boost::system::error_code write_error;
             std::string response = "";
             if (handlerMap->count(handlerExt) != 0) {
-                //response = (*handlerMap)[handlerExt]->handleRequests(req.path);
                 response = (*handlerMap)[handlerExt]->HandleRequest(req);
             }
             std::cout << "    Response:\n" <<  response << "\n";

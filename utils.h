@@ -10,7 +10,6 @@
 
 int getPort(const NginxConfig &config);
 
-// TODO: Change signature to map<string, RequestHandler*> 
 std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config);
 
 #endif // UTILS_H
