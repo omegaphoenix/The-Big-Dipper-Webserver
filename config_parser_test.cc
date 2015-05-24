@@ -67,7 +67,7 @@ TEST_F(NginxStringConfigTest, NestedConfig) {
 }
 
 TEST_F(NginxStringConfigTest, GetPortTest) {
-    EXPECT_EQ(20, GetPort("port 20;"));
+    EXPECT_EQ(20, GetPort("listen 20;"));
 }
 
 
