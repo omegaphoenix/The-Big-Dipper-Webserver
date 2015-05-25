@@ -103,7 +103,7 @@ class RequestHandlerTest : public ::testing::Test {
     }   
 
     bool NewHandleEchoResponse(const HTTPRequest &req) {
-        NewEchoHandler * a = new NewEchoHandler("/echo");
+        NewEchoHandler * a = new NewEchoHandler();
         std::string output;
         size_t check_http200;
         size_t check_content_type;
@@ -164,22 +164,56 @@ class RequestHandlerTest : public ::testing::Test {
 
 // Writing more tests, 5/7/2015 Assignment 5
 // updated 5/25/2015 with new API
+
+// creating HTTPRequests to be passed into test functions
+HTTPRequest test_hello;
+test_hello.method = "GET";
+test_hello.path = "/hello";
+test_hello.headers = NULL;
+test_hello.request_body = "HTTP/1.1";
+
 TEST_F(RequestHandlerTest, NewHandleHelloResponse) {
-    EXPECT_TRUE(NewHandleHelloResponse("GET /hello HTTP/1.1"));
+    EXPECT_TRUE(NewHandleHelloResponse(test_hello));
 }
 
+
+HTTPRequest test_echo;
+test_echo.method = "GET";
+test_echo.path = "/echo";
+test_echo.headers = NULL;
+test_echo.request_body = "HTTP/1.1";
+
 TEST_F(RequestHandlerTest, NewHandleEchoResponse) {
-    EXPECT_TRUE(NewHandleEchoResponse("GET /echo HTTP/1.1"));
+    EXPECT_TRUE(NewHandleEchoResponse(test_echo));
 }
+
+
+HTTPRequest test_static1;
+test_static1.method = "GET";
+test_static1.path = "/static/test.txt";
+test_static1.headers = NULL;
+test_static1.request_body = "HTTP/1.1";
+
+HTTPRequest test_static2;
+test_static1.method = "GET";
+test_static1.path = "/static/asdfsdf";
+test_static1.headers = NULL;
+test_static1.request_body = "HTTP/1.1";
+
+HTTPRequest test_static3;
+test_static1.method = "GET";
+test_static1.path = "/static/Caltech.jpg";
+test_static1.headers = NULL;
+test_static1.request_body = "HTTP/1.1";
 
 TEST_F(RequestHandlerTest, NewHandleStaticResponse) {
     // Depends on file /static_test/test.txt with content "testing".
     // Test also assumes the mapping m["/static"] = "./static_test"
-    EXPECT_TRUE(HandleStaticResponse("GET /static/test.txt HTTP/1.1", "testing", 0, 1));
+    EXPECT_TRUE(HandleStaticResponse(test_static1, "testing", 0, 1));
     // Checks nonexistent file /static_test/asdfsdf 
-    EXPECT_TRUE(HandleStaticResponse("GET /static/asdfsdf HTTP/1.1", "Error 404", 0, 0));
+    EXPECT_TRUE(HandleStaticResponse(test_static2, "Error 404", 0, 0));
     //
-    EXPECT_TRUE(HandleStaticResponse("GET /static/Caltech.jpg HTTP/1.1", "jpeg", 1, 1));
+    EXPECT_TRUE(HandleStaticResponse(test_static3, "jpeg", 1, 1));
 }
 
 

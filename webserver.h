@@ -8,6 +8,7 @@
 #include "hello_world_handler.h"
 #include "echo_handler.h"
 #include "static_file_handler.h"
+#include "error_handler.h"
 
 using boost::asio::ip::tcp;
 

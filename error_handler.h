@@ -1,5 +1,15 @@
-include "request_handler.h"
+#ifndef ERROR_HANDLER_H
+#define ERROR_HANDLER_H
+#include "request_handler.h"
 
+class ErrorHandler : public RequestHandler {
+    public:
+        void Configure(const NginxConfig& child_config_block);
+        std::string HandleRequest(const HTTPRequest &req);
+};
+
+#endif
+/*
 // This handler just reads the input request and returns a 404!
 class ErrorHandler : public RequestHandler {
     public:
@@ -18,7 +28,7 @@ class ErrorHandler : public RequestHandler {
             cerr << "Could not find 'image_url' config statement.";
         }
 
-        std::string HandleRequest(const HtTPRequest& req) {
+        std::string HandleRequest(const HTTPRequest& req) {
             return CreateHTTPResponse(404, image_url_);
         }
     private:
@@ -27,3 +37,4 @@ class ErrorHandler : public RequestHandler {
         }
         std::string image_url_;
 }
+*/
