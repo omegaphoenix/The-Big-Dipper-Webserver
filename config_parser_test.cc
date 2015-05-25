@@ -80,14 +80,14 @@ class RequestHandlerTest : public ::testing::Test {
     // Modified 5/24/2015 to work with new handlers.
     protected:
     bool NewHandleHelloResponse(const HTTPRequest &req) {
-        NewHelloHandler * a = new NewHelloHandler; // changed
+        NewHelloHandler a; // changed
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_hello;
         size_t check_date;
 
-        output = a->HandleRequest(req);
+        output = a.HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
@@ -114,7 +114,7 @@ class RequestHandlerTest : public ::testing::Test {
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_date = output.find("GMT");
-        check_request = output.find(config_string);
+        check_request = output.find(req.request_body);
 
         if (check_http200 == std::string::npos ||
             check_content_type == std::string::npos ||
@@ -127,7 +127,7 @@ class RequestHandlerTest : public ::testing::Test {
 
     bool HandleStaticResponse(const HTTPRequest &req, 
             const std::string &expected, bool jpg_flag, bool http_flag) {
-        StaticFileHandler * a = new StaticFileHandler("/static", "./static_test");
+        NewStaticHandler * a = new NewStaticHandler();
         std::string output;
         size_t check_http;
         size_t check_content_type;

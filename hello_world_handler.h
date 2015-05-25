@@ -3,8 +3,9 @@
 #include "request_handler.h"
 
 class NewHelloHandler: public RequestHandler {
-    void Configure(const NginxConfig& child_config_block);
-    std::string HandleRequest(const HTTPRequest& req);
+    public:
+        void Configure(const NginxConfig& child_config_block);
+        std::string HandleRequest(const HTTPRequest& req);
     private:
         const std::string hello = "\r\n<html><body>"
                                   "Hello, world!</body></html>\r\n";
