@@ -80,14 +80,14 @@ class RequestHandlerTest : public ::testing::Test {
     // Modified 5/24/2015 to work with new handlers.
     protected:
     bool NewHandleHelloResponse(const HTTPRequest &req) {
-        NewHelloHandler a; // changed
+        NewHelloHandler * a = new NewHelloHandler(); // changed
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_hello;
         size_t check_date;
 
-        output = a.HandleRequest(req);
+        output = a->HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
@@ -166,47 +166,52 @@ class RequestHandlerTest : public ::testing::Test {
 // updated 5/25/2015 with new API
 
 // creating HTTPRequests to be passed into test functions
-HTTPRequest test_hello;
-test_hello.method = "GET";
-test_hello.path = "/hello";
-test_hello.headers = NULL;
-test_hello.request_body = "HTTP/1.1";
+
+
 
 TEST_F(RequestHandlerTest, NewHandleHelloResponse) {
+    HTTPRequest test_hello;
+    test_hello.method = "GET";
+    test_hello.path = "/hello";
+   // test_hello.headers = NULL;
+    test_hello.request_body = "HTTP/1.1";
     EXPECT_TRUE(NewHandleHelloResponse(test_hello));
 }
 
 
-HTTPRequest test_echo;
-test_echo.method = "GET";
-test_echo.path = "/echo";
-test_echo.headers = NULL;
-test_echo.request_body = "HTTP/1.1";
 
 TEST_F(RequestHandlerTest, NewHandleEchoResponse) {
+    HTTPRequest test_echo;
+    test_echo.method = "GET";
+    test_echo.path = "/echo";
+    //test_echo.headers = NULL;
+    test_echo.request_body = "HTTP/1.1";
+
     EXPECT_TRUE(NewHandleEchoResponse(test_echo));
 }
 
 
-HTTPRequest test_static1;
-test_static1.method = "GET";
-test_static1.path = "/static/test.txt";
-test_static1.headers = NULL;
-test_static1.request_body = "HTTP/1.1";
 
-HTTPRequest test_static2;
-test_static1.method = "GET";
-test_static1.path = "/static/asdfsdf";
-test_static1.headers = NULL;
-test_static1.request_body = "HTTP/1.1";
-
-HTTPRequest test_static3;
-test_static1.method = "GET";
-test_static1.path = "/static/Caltech.jpg";
-test_static1.headers = NULL;
-test_static1.request_body = "HTTP/1.1";
 
 TEST_F(RequestHandlerTest, NewHandleStaticResponse) {
+HTTPRequest test_static1;
+    test_static1.method = "GET";
+    test_static1.path = "/static/test.txt";
+    //test_static1.headers = NULL;
+    test_static1.request_body = "HTTP/1.1";
+
+HTTPRequest test_static2;
+    test_static1.method = "GET";
+    test_static1.path = "/static/asdfsdf";
+    //test_static1.headers = NULL;
+    test_static1.request_body = "HTTP/1.1";
+
+HTTPRequest test_static3;
+    test_static1.method = "GET";
+    test_static1.path = "/static/Caltech.jpg";
+    //test_static1.headers = NULL;
+    test_static1.request_body = "HTTP/1.1";
+
     // Depends on file /static_test/test.txt with content "testing".
     // Test also assumes the mapping m["/static"] = "./static_test"
     EXPECT_TRUE(HandleStaticResponse(test_static1, "testing", 0, 1));
