@@ -43,6 +43,8 @@ struct HTTPRequest {
 //   dispatch[path] = h;
 class RequestHandler {
     public:
+        virtual ~RequestHandler() {}
+
         // Configures this request handler to handle a particular type of request.
         // It will be passed only the block of the config that pertains to this
         // handler. The config block is represented by an NginxConfig.

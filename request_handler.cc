@@ -12,8 +12,7 @@ std::string RequestHandler::makeDaytimeString() {
 // TODO: Replace old Handler.
 // Note that the below code does not comply with 
 // the common API and should be removed once the
-// tests and getMappings() are reconfigured, and 
-// the new handlers are renamed (if necessary).
+// tests are reconfigured. 
 
 Handler::Handler(std::string handlerExt) {
     this->handlerExt = handlerExt;

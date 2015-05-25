@@ -1,7 +1,16 @@
 #include "static_file_handler.h"
 
 void NewStaticHandler::Configure(const NginxConfig& child_config_block) {
-    // TODO: Initialize this->root. 
+    // TODO: Initialize this->root.
+    for (std::vector<std::shared_ptr<NginxConfigStatement>>::const_iterator iter =
+         child_config_block.statements_.begin();
+         iter != child_config_block.statements_.end(); ++iter) {
+            if (((*iter)->tokens_.size() > 1)) {
+                if((*iter)->tokens_[0] == "root") {
+                    this->root = (*iter)->tokens_[1];
+                }
+            }
+        } 
 }
 
 std::string NewStaticHandler::HandleRequest(const HTTPRequest& req) {
@@ -51,8 +60,7 @@ std::string NewStaticHandler::HandleRequest(const HTTPRequest& req) {
 // TODO: Replace old Handler.
 // Note that the below code does not comply with 
 // the common API and should be removed once the
-// tests and getMappings() are reconfigured, and 
-// the new handlers are renamed (if necessary).
+// tests are reconfigured. 
 
 StaticFileHandler::StaticFileHandler(std::string handlerExt, std::string basePath) : Handler(handlerExt) {
     this->basePath = basePath;

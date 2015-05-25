@@ -3,13 +3,16 @@ CXXFLAGS = -std=c++0x -Wall -g
 LDFLAGS = -lboost_system
 GTEST_DIR = gtest-1.7.0
 TESTFLAGS = -isystem $(GTEST_DIR)/include -I$(GTEST_DIR) -pthread
-PROG = webserver config_parser_test
+PROG = webserver config_parser_test webserver2
 SRCS = webserver.cc config_parser.cc request_handler.cc hello_world_handler.cc echo_handler.cc static_file_handler.cc utils.cc
 
 all: test webserver
 webserver: $(SRCS:.cpp=.o) webserver_main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	./webserver config_file
+	./webserver example_config2 
+
+webserver2: $(SRCS:.cpp=.o) webserver_main.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 test: config_parser_test
 	./config_parser_test
