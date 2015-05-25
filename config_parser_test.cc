@@ -114,7 +114,7 @@ class RequestHandlerTest : public ::testing::Test {
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_date = output.find("GMT");
-        check_request = output.find(req.request_body);
+        check_request = output.find(req.method + " " + req.path + "\n");
 
         if (check_http200 == std::string::npos ||
             check_content_type == std::string::npos ||
