@@ -1,6 +1,7 @@
 #include "static_file_handler.h"
 
 void ErrorHandler::Configure(const NginxConfig& child_config_block) {
+    // Does not need to configure.
 }
 
 std::string ErrorHandler::HandleRequest(const HTTPRequest& req) {

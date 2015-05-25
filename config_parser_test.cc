@@ -76,16 +76,18 @@ TEST_F(NginxStringConfigTest, GetPortTest) {
 class RequestHandlerTest : public ::testing::Test {
     // Added 5/7/2015
     // Assignment 5 unit tests
+
+    // Modified 5/24/2015 to work with new handlers.
     protected:
-    bool HandleHelloResponse(const std::string &config_string) {
-        HelloWorldHandler * a = new HelloWorldHandler("/hello");
+    bool NewHandleHelloResponse(const HTTPRequest &req) {
+        NewHelloHandler * a = new NewHelloHandler; // changed
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_hello;
         size_t check_date;
 
-        output = a->handleRequests(config_string);
+        output = a->HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
@@ -100,15 +102,15 @@ class RequestHandlerTest : public ::testing::Test {
         return 1;     
     }   
 
-    bool HandleEchoResponse(const std::string &config_string) {
-        EchoHandler * a = new EchoHandler("/echo");
+    bool NewHandleEchoResponse(const HTTPRequest &req) {
+        NewEchoHandler * a = new NewEchoHandler("/echo");
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_date;
         size_t check_request;
 
-        output = a->handleRequests(config_string);
+        output = a->HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_date = output.find("GMT");
@@ -123,7 +125,7 @@ class RequestHandlerTest : public ::testing::Test {
         return 1;     
     }  
 
-    bool HandleStaticResponse(const std::string &config_string, 
+    bool HandleStaticResponse(const HTTPRequest &req, 
             const std::string &expected, bool jpg_flag, bool http_flag) {
         StaticFileHandler * a = new StaticFileHandler("/static", "./static_test");
         std::string output;
@@ -132,7 +134,7 @@ class RequestHandlerTest : public ::testing::Test {
         size_t check_date;
         size_t check_request;
 
-        output = a->handleRequests(config_string);
+        output = a->HandleRequest(req);
 
         if (http_flag) {
             check_http = output.find("HTTP/1.0 200 OK\r\n");
@@ -161,15 +163,16 @@ class RequestHandlerTest : public ::testing::Test {
 };
 
 // Writing more tests, 5/7/2015 Assignment 5
-TEST_F(RequestHandlerTest, HandleHelloResponse) {
-    EXPECT_TRUE(HandleHelloResponse("GET /hello HTTP/1.1"));
+// updated 5/25/2015 with new API
+TEST_F(RequestHandlerTest, NewHandleHelloResponse) {
+    EXPECT_TRUE(NewHandleHelloResponse("GET /hello HTTP/1.1"));
 }
 
-TEST_F(RequestHandlerTest, HandleEchoResponse) {
-    EXPECT_TRUE(HandleEchoResponse("GET /echo HTTP/1.1"));
+TEST_F(RequestHandlerTest, NewHandleEchoResponse) {
+    EXPECT_TRUE(NewHandleEchoResponse("GET /echo HTTP/1.1"));
 }
 
-TEST_F(RequestHandlerTest, HandleStaticResponse) {
+TEST_F(RequestHandlerTest, NewHandleStaticResponse) {
     // Depends on file /static_test/test.txt with content "testing".
     // Test also assumes the mapping m["/static"] = "./static_test"
     EXPECT_TRUE(HandleStaticResponse("GET /static/test.txt HTTP/1.1", "testing", 0, 1));
@@ -178,4 +181,6 @@ TEST_F(RequestHandlerTest, HandleStaticResponse) {
     //
     EXPECT_TRUE(HandleStaticResponse("GET /static/Caltech.jpg HTTP/1.1", "jpeg", 1, 1));
 }
+
+
 
