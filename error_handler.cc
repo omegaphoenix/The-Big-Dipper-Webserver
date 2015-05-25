@@ -1,4 +1,4 @@
-#include "static_file_handler.h"
+#include "error_handler.h"
 
 void ErrorHandler::Configure(const NginxConfig& child_config_block) {
     // Does not need to configure.

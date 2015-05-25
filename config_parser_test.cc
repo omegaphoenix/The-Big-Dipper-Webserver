@@ -80,14 +80,14 @@ class RequestHandlerTest : public ::testing::Test {
     // Modified 5/24/2015 to work with new handlers.
     protected:
     bool NewHandleHelloResponse(const HTTPRequest &req) {
-        NewHelloHandler * a = new NewHelloHandler(); // changed
+        NewHelloHandler a; // changed
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_hello;
         size_t check_date;
 
-        output = a->HandleRequest(req);
+        output = a.HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_hello = output.find("\r\n<html><body>Hello, world!</body></html>\r\n");
@@ -103,14 +103,14 @@ class RequestHandlerTest : public ::testing::Test {
     }   
 
     bool NewHandleEchoResponse(const HTTPRequest &req) {
-        NewEchoHandler * a = new NewEchoHandler();
+        NewEchoHandler a;
         std::string output;
         size_t check_http200;
         size_t check_content_type;
         size_t check_date;
         size_t check_request;
 
-        output = a->HandleRequest(req);
+        output = a.HandleRequest(req);
         check_http200 = output.find("HTTP/1.0 200 OK\r\n"); //note- could not use protected var.
         check_content_type = output.find("Content-Type: text/html;\r\n");  
         check_date = output.find("GMT");
@@ -127,14 +127,14 @@ class RequestHandlerTest : public ::testing::Test {
 
     bool HandleStaticResponse(const HTTPRequest &req, 
             const std::string &expected, bool jpg_flag, bool http_flag) {
-        NewStaticHandler * a = new NewStaticHandler();
+        NewStaticHandler a;
         std::string output;
         size_t check_http;
         size_t check_content_type;
         size_t check_date;
         size_t check_request;
 
-        output = a->HandleRequest(req);
+        output = a.HandleRequest(req);
 
         if (http_flag) {
             check_http = output.find("HTTP/1.0 200 OK\r\n");
@@ -160,6 +160,26 @@ class RequestHandlerTest : public ::testing::Test {
         }
         return 1;     
     }  
+
+    bool HandleErrorResponse(const HTTPRequest &req) {
+        ErrorHandler a; // changed
+        std::string output;
+        size_t check_http404;
+        size_t check_date;
+        size_t check_msg;
+
+        output = a.HandleRequest(req);
+        check_http404 = output.find("HTTP/1.0 404 Not Found\r\n"); //note- could not use protected var.
+        check_date = output.find("GMT");
+        check_msg = output.find("Error 404: Not Found.");
+
+        if (check_http404 == std::string::npos ||
+            check_date == std::string::npos ||
+            check_msg == std::string::npos) {
+            return 0;
+        }
+        return 1;     
+    }   
 };
 
 // Writing more tests, 5/7/2015 Assignment 5
@@ -221,5 +241,15 @@ HTTPRequest test_static3;
     EXPECT_TRUE(HandleStaticResponse(test_static3, "jpeg", 1, 1));
 }
 
+
+TEST_F(RequestHandlerTest, HandleErrorResponse) {
+    HTTPRequest test_error;
+    test_error.method = "GET";
+    test_error.path = "/error";
+    //test_error.headers = NULL;
+    test_error.request_body = "HTTP/1.1";
+
+    EXPECT_TRUE(HandleErrorResponse(test_error));
+}
 
 
