@@ -28,17 +28,20 @@ std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config)
         bool k1 = false; // True if last two tokens were handler helloworld
         bool k2 = false; // True if last two tokens were handler copycat
         bool k3 = false; // True if past handler static but not root
+        bool k4 = false; // True if last two tokens were handler error
         for (const std::string& token : statement->tokens_) {
             if (k) {
                 k1 = (token == "helloworld");
                 k2 = (token == "echo");
                 k3 = (token == "static");
+                k4 = (token == "error");
             }
             else {
                 if (k1) {
                     try {
-                        printf("Created helloworld\n");
+                        printf("Created helloworld handler.\n");
                         h = new HelloHandler();
+                        h->Configure(*(statement->child_block_));
                         handlerMap->insert(std::pair<std::string, RequestHandler*>(token, h));
                     }
                     catch (...) {
@@ -46,8 +49,9 @@ std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config)
                 }
                 else if (k2) {
                     try {
-                        printf("Created echo\n");
+                        printf("Created echo handler.\n");
                         h = new EchoHandler();
+                        h->Configure(*(statement->child_block_));
                         handlerMap->insert(std::pair<std::string, RequestHandler*>(token, h));
                     }
                     catch (...) {
@@ -55,7 +59,7 @@ std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config)
                 }
                 else if (k3) {
                     name = token;
-                    printf("Created static\n");
+                    printf("Created static handler.\n");
                     try {
                         h = new StaticHandler();
                         h->Configure(*(statement->child_block_));
@@ -64,9 +68,21 @@ std::map<std::string, RequestHandler*> *getMappings(const NginxConfig &config)
                     catch (...) {
                     }
                 }
+                else if (k4) {
+                    try {
+                        printf("Created error handler.\n");
+                        h = new ErrorHandler();
+                        h->Configure(*(statement->child_block_));
+                        handlerMap->insert(std::pair<std::string, RequestHandler*>(token, h));
+                    }
+                    catch (...) {
+                    }
+                }
+
                 k1 = false;
                 k2 = false;
                 k3 = false;
+                k4 = false;
             }
             k = (token == "handler");
         }
