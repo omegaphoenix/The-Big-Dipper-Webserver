@@ -6,13 +6,12 @@ TESTFLAGS = -isystem $(GTEST_DIR)/include -I$(GTEST_DIR) -pthread
 PROG = webserver config_parser_test webserver2
 SRCS = webserver.cc config_parser.cc request_handler.cc hello_world_handler.cc  echo_handler.cc error_handler.cc static_file_handler.cc utils.cc
 
-all: test webserver
+all: test webserver run_server
 webserver: $(SRCS:.cpp=.o) webserver_main.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-	./webserver example_config2 
 
-webserver2: $(SRCS:.cpp=.o) webserver_main.o
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+run_server:
+	./webserver config_file 
 
 test: config_parser_test
 	./config_parser_test
@@ -25,6 +24,6 @@ config_parser_test: config_parser_test.cc $(SRCS:.cpp=.o)
 clean:
 	$(RM) $(PROG) *.o *~
 
-.PHONY: all clean
+.PHONY: all clean run_server
 
 -include $(SRCS:.cc=.d)
