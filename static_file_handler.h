@@ -2,7 +2,7 @@
 #define STATIC_FILE_HANDLER_H
 #include "request_handler.h" 
 
-class NewStaticHandler : public RequestHandler {
+class StaticHandler : public RequestHandler {
     public:
         void Configure(const NginxConfig& child_config_block);
         std::string HandleRequest(const HTTPRequest& req);

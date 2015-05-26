@@ -2,7 +2,7 @@
 #define HELLO_WORLD_HANDLER_H
 #include "request_handler.h"
 
-class NewHelloHandler: public RequestHandler {
+class HelloHandler: public RequestHandler {
     public:
         void Configure(const NginxConfig& child_config_block);
         std::string HandleRequest(const HTTPRequest& req);

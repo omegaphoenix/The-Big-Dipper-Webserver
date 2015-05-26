@@ -77,8 +77,8 @@ class RequestHandlerTest : public ::testing::Test {
 
     // Modified 5/24/2015 to work with new handlers.
     protected:
-    bool NewHandleHelloResponse(const HTTPRequest &req) {
-        NewHelloHandler a; // changed
+    bool HandleHelloResponse(const HTTPRequest &req) {
+        HelloHandler a; // changed
         std::string output;
         size_t check_http200;
         size_t check_content_type;
@@ -100,8 +100,8 @@ class RequestHandlerTest : public ::testing::Test {
         return 1;     
     }   
 
-    bool NewHandleEchoResponse(const HTTPRequest &req) {
-        NewEchoHandler a;
+    bool HandleEchoResponse(const HTTPRequest &req) {
+        EchoHandler a;
         std::string output;
         size_t check_http200;
         size_t check_content_type;
@@ -126,7 +126,7 @@ class RequestHandlerTest : public ::testing::Test {
     bool HandleStaticResponse(const HTTPRequest &req, 
             const std::string &root_path, const std::string &expected, 
             bool jpg_flag, bool http_flag) {
-        NewStaticHandler a;
+        StaticHandler a;
         std::string output;
         size_t check_http;
         size_t check_content_type;
@@ -189,19 +189,19 @@ class RequestHandlerTest : public ::testing::Test {
 };
 
 // Request Handler Tests:
-TEST_F(RequestHandlerTest, NewHandleHelloResponse) {
+TEST_F(RequestHandlerTest, HandleHelloResponse) {
     HTTPRequest test_hello;
     test_hello.method = "GET";
     test_hello.path = "/hello";
-    EXPECT_TRUE(NewHandleHelloResponse(test_hello));
+    EXPECT_TRUE(HandleHelloResponse(test_hello));
 }
 
 
-TEST_F(RequestHandlerTest, NewHandleEchoResponse) {
+TEST_F(RequestHandlerTest, HandleEchoResponse) {
     HTTPRequest test_echo;
     test_echo.method = "GET";
     test_echo.path = "/echo";
-    EXPECT_TRUE(NewHandleEchoResponse(test_echo));
+    EXPECT_TRUE(HandleEchoResponse(test_echo));
 }
 
 

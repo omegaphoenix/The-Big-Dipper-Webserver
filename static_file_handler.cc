@@ -1,6 +1,6 @@
 #include "static_file_handler.h"
 
-void NewStaticHandler::Configure(const NginxConfig& child_config_block) {
+void StaticHandler::Configure(const NginxConfig& child_config_block) {
     for (std::vector<std::shared_ptr<NginxConfigStatement>>::const_iterator iter =
          child_config_block.statements_.begin();
          iter != child_config_block.statements_.end(); ++iter) {
@@ -12,7 +12,7 @@ void NewStaticHandler::Configure(const NginxConfig& child_config_block) {
         } 
 }
 
-std::string NewStaticHandler::HandleRequest(const HTTPRequest& req) {
+std::string StaticHandler::HandleRequest(const HTTPRequest& req) {
     // Strip handler extension.
     std::istringstream iss(req.path); 
     std::string handlerExt = "";
