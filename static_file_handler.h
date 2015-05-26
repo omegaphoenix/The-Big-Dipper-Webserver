@@ -10,19 +10,4 @@ class NewStaticHandler : public RequestHandler {
         std::string root;
 };
 
-// TODO: Replace old Handler.
-// Note that the below code does not comply with 
-// the common API and should be removed once the
-// tests are reconfigured.
-
-class StaticFileHandler: public Handler {
-    public:
-        StaticFileHandler(std::string requestPath, std::string basePath); 
-
-        std::string handleRequests(std::string request);
-
-    private:
-        std::string requestPath;
-        std::string basePath;
-};
-#endif
+#endif // STATIC_FILE_HANDLER_H

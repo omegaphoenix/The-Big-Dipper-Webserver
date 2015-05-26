@@ -8,14 +8,4 @@ class NewEchoHandler : public RequestHandler {
         std::string HandleRequest(const HTTPRequest &req);
 };
 
-// TODO: Replace old Handler.
-// Note that the below code does not comply with 
-// the common API and should be removed once the
-// tests.
-
-class EchoHandler : public Handler {
-    public:
-        EchoHandler(std::string handlerExt);
-        std::string handleRequests(std::string request);
-};
-#endif
+#endif // ECHO_HANDLER_H

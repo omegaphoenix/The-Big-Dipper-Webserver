@@ -15,15 +15,4 @@ std::string NewEchoHandler::HandleRequest(const HTTPRequest &req) {
     return http200 + contentTypeHTML + date + "\r\n" + content;
 }
 
-// TODO: Replace old Handler.
-// Note that the below code does not comply with 
-// the common API and should be removed once the
-// tests are reconfigured. 
 
-EchoHandler::EchoHandler(std::string handlerExt) :
-    Handler(handlerExt) {}
-
-std::string EchoHandler::handleRequests(std::string request) {
-    std::string date = makeDaytimeString();
-    return http200 + contentTypeHTML + date + "\r\n" + request;
-}
