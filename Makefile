@@ -17,7 +17,7 @@ webserver2: $(SRCS:.cpp=.o) webserver_main.o
 test: config_parser_test
 	./config_parser_test
 
-config_parser_test:
+config_parser_test: config_parser_test.cc
 	$(CXX) $(CXXFLAGS) $(TESTFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o
 	$(CXX) $(CXXFLAGS) $(TESTFLAGS) $(SRCS) config_parser_test.cc $(GTEST_DIR)/src/gtest_main.cc libgtest.a -o config_parser_test $(LDFLAGS)
