@@ -1,10 +1,27 @@
-Parser for nginx config files.
-
 Includes code from googletest-1.7.0. See https://code.google.com/p/googletest/
-
 Inspired by https://github.com/fatiherikli/nginxparser
+Created by: David Qu, Justin Leong, and Jonathan Joo.
 
-Created by:
-David Qu
-Justin Leong
-Jonathan Joo
+Contributor Documentation:
+
+Make commands:
+    make              =>   Build all, runs tests, and webserver.
+    make clean all    =>   Make clean and build.
+    make webserver    =>   Make webserver.
+    make test         =>   Build and run tests.
+    make run_server   =>   Run webserver.
+
+Dispatch mechanism:
+    map set up by getMappings() in utils.cc/.h
+    Passed to WebServer constructor in webserver.cc/.h 
+        and webserver_main.cc
+    WebServer calls HandleRequest() in Webserver::run()
+
+To make a new Handler:
+    1. Write newHandler.cc/.h
+        See static_file_handler.cc/h for an example.
+        Need to instantiate Configure() and HandleRequest()
+        virtual methods.
+    2. Include newHandler.h in utils.h and webserver.h
+    3. Update getMappings() in utils.cc to handle 
+        a new type of server.
