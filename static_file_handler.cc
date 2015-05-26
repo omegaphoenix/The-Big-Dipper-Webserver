@@ -19,7 +19,7 @@ std::string NewStaticHandler::HandleRequest(const HTTPRequest& req) {
     std::string handlerExt = "";
     std::getline(iss, handlerExt, '/');  
     std::getline(iss, handlerExt, '/'); 
-    std::string path(req.path.begin() + handlerExt.size() + 1, req.path.end());
+    std::string path(req.path.begin() + handlerExt.size() + 2, req.path.end());
     path = "/" + path;
 
     // Check for index request. 
