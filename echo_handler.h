@@ -2,20 +2,10 @@
 #define ECHO_HANDLER_H
 #include "request_handler.h"
 
-class NewEchoHandler : public RequestHandler {
+class EchoHandler : public RequestHandler {
     public:
         void Configure(const NginxConfig& child_config_block);
         std::string HandleRequest(const HTTPRequest &req);
 };
 
-// TODO: Replace old Handler.
-// Note that the below code does not comply with 
-// the common API and should be removed once the
-// tests.
-
-class EchoHandler : public Handler {
-    public:
-        EchoHandler(std::string handlerExt);
-        std::string handleRequests(std::string request);
-};
-#endif
+#endif // ECHO_HANDLER_H

@@ -8,6 +8,7 @@
 #include "hello_world_handler.h"
 #include "echo_handler.h"
 #include "static_file_handler.h"
+#include "error_handler.h"
 
 using boost::asio::ip::tcp;
 
@@ -20,9 +21,7 @@ class WebServer {
         void parseHTTP(tcp::socket *socket, HTTPRequest *req);
         void run();
     private:
-        void createHandler(std::string request, Handler *h);
         int port;
-        // TODO: Change map to map<string, RequestHandler*>
         std::map<std::string, RequestHandler*> *handlerMap; 
         const std::string http200 = "HTTP/1.0 200 OK\n";
         const std::string contentType = "Content-Type: text/html;\n";
