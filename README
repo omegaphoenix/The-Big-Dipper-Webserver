@@ -25,3 +25,7 @@ To make a new Handler:
     2. Include newHandler.h in utils.h and webserver.h
     3. Update getMappings() in utils.cc to handle 
         a new type of server.
+
+Tests are located in config_parser_test.cc
+    1. To make a test for a handler, look at the
+        RequestHandlerTest class.
