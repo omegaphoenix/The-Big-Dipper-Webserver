@@ -13,13 +13,18 @@ webserver: $(SRCS:.cpp=.o) webserver_main.o
 run_server:
 	./webserver config_file 
 
-test: config_parser_test
+test: config_parser_test proxy_handler_test
 	./config_parser_test
 
 config_parser_test: config_parser_test.cc $(SRCS:.cpp=.o) 
 	$(CXX) $(CXXFLAGS) $(TESTFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
 	ar -rv libgtest.a gtest-all.o
 	$(CXX) $(CXXFLAGS) $(TESTFLAGS) $(SRCS) config_parser_test.cc $(GTEST_DIR)/src/gtest_main.cc libgtest.a -o config_parser_test $(LDFLAGS)
+
+proxy_handler_test: proxy_handler_test.cc $(SRCS:.cpp=.o) 
+	$(CXX) $(CXXFLAGS) $(TESTFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
+	ar -rv libgtest.a gtest-all.o
+	$(CXX) $(CXXFLAGS) $(TESTFLAGS) $(SRCS) proxy_handler_test.cc $(GTEST_DIR)/src/gtest_main.cc libgtest.a -o proxy_handler_test $(LDFLAGS)
 
 clean:
 	$(RM) $(PROG) *.o *~
