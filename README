@@ -10,6 +10,8 @@ Make commands:
     make webserver    =>   Make webserver.
     make test         =>   Build and run tests.
     make run_server   =>   Run webserver.
+    make proxy_handler_test   =>   Run proxy_handler_test.
+        This test is separate because it takes a while to run. (around 5 minutes)
 
 Dispatch mechanism:
     map set up by getMappings() in utils.cc/.h

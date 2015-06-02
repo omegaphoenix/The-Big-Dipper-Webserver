@@ -9,6 +9,8 @@
 #   . helloworld
 #   . error
 #   . root
+#   . proxy
+#   . host
 
 listen 1337;
 
