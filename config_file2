@@ -1,0 +1,34 @@
+# Expected config file format. Unlike the RequestHandler API, this format was
+# what not decided based on a vote :).
+#
+# Keywords:
+#   . listen
+#   . handler
+#   . static
+#   . echo
+#   . helloworld
+#   . error
+#   . root
+
+listen 1080;
+
+handler static /images {
+  root ./images;
+}
+
+handler static /static {
+  root ./static_test;
+}
+
+handler echo /copycat {
+}
+
+handler helloworld /hw2 {
+}
+
+handler error /error404 {
+}
+
+handler proxy /reverse {
+    host localhost 1337;
+}
