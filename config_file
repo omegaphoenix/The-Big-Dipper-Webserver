@@ -20,19 +20,13 @@ handler static /static {
   root ./static_test;
 }
 
-# TODO: Update parser to accept blocks with no content. (Currently
-# the TODO statement is necessary for the parser to work correctly).
-
 handler echo /copycat {
-  TODO;
 }
 
 handler helloworld /hw2 {
-  TODO;
 }
 
 handler error /error404 {
-  TODO;
 }
 
 handler proxy /reverse {
