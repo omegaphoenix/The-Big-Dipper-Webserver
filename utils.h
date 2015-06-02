@@ -8,6 +8,7 @@
 #include "echo_handler.h"
 #include "static_file_handler.h"
 #include "error_handler.h"
+#include "proxy_handler.h"
 
 int getPort(const NginxConfig &config);
 

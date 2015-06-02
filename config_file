@@ -34,3 +34,7 @@ handler helloworld /hw2 {
 handler error /error404 {
   TODO;
 }
+
+handler proxy /reverse {
+    host www.google.com 80;
+}
